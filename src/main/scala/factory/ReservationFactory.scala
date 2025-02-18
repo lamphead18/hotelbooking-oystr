@@ -9,9 +9,6 @@ trait ReservationFactory {
 
 class DefaultReservationFactory extends ReservationFactory {
   def createReservation(guest: Guest, room: Room, startDate: LocalDateTime, endDate: LocalDateTime): Option[Reservation] = {
-    if (room.isAvailable) {
-      room.isAvailable = false
-      Some(Reservation(guest, room, startDate, endDate))
-    } else None
+    Some(Reservation(guest.name, guest.email, room.id, startDate, endDate))
   }
 }

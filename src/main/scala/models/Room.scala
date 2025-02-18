@@ -1,3 +1,3 @@
 package models
 
-case class Room(id: String, capacity: Int, var isAvailable: Boolean = true)
+case class Room(id: String, capacity: Int, isAvailable: Boolean = true)

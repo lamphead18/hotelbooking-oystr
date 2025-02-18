@@ -9,27 +9,32 @@ import repository._
 import services._
 import factory._
 import models._
+import slick.jdbc.PostgresProfile.api._
 import scala.io.StdIn
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Success, Failure}
 
 object HotelBookingAPI extends App {
   implicit val system: ActorSystem = ActorSystem("hotel-booking")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val ec: ExecutionContext = system.dispatcher
 
-  val roomRepo = new RoomRepository()
+  val db = Database.forConfig("slick.db")
+  val roomRepo = new RoomRepository(db)
+  val reservationRepo = new ReservationRepository(db)
   val factory = new DefaultReservationFactory()
-  val reservationService = new ReservationService(factory)
+  val reservationService = new ReservationService(factory, reservationRepo)
   val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   val route = concat(
     path("addRoom") {
       post {
         parameter("id", "capacity".as[Int]) { (id, capacity) =>
-          roomRepo.addRoom(Room(id, capacity))
-          complete(StatusCodes.OK, s"Quarto $id adicionado!")
+          onComplete(roomRepo.addRoom(Room(id, capacity))) {
+            case _ => complete(StatusCodes.OK, s"Quarto $id adicionado!")
+          }
         }
       }
     },
@@ -39,13 +44,15 @@ object HotelBookingAPI extends App {
           val parsedStartDate = LocalDateTime.parse(startDate, formatter)
           val parsedEndDate = LocalDateTime.parse(endDate, formatter)
 
-          roomRepo.getRoom(roomId) match {
-            case Some(room) =>
-              reservationService.bookRoom(Guest(name, email), room, parsedStartDate, parsedEndDate) match {
-                case Some(_) => complete(StatusCodes.OK, "Reserva confirmada!")
-                case None    => complete(StatusCodes.Conflict, "Quarto não disponível!")
+          onComplete(roomRepo.getRoom(roomId)) {
+            case Success(Some(room)) =>
+              onComplete(reservationService.bookRoom(Guest(name, email), room, parsedStartDate, parsedEndDate)) {
+                case Success(Some(_)) => complete(StatusCodes.OK, "Reserva confirmada!")
+                case Success(None)    => complete(StatusCodes.Conflict, "Quarto não disponível!")
+                case Failure(ex)      => complete(StatusCodes.InternalServerError, s"Erro interno: ${ex.getMessage}")
               }
-            case None => complete(StatusCodes.NotFound, "Quarto não encontrado!")
+            case Success(None) => complete(StatusCodes.NotFound, "Quarto não encontrado!")
+            case Failure(ex)   => complete(StatusCodes.InternalServerError, s"Erro interno: ${ex.getMessage}")
           }
         }
       }

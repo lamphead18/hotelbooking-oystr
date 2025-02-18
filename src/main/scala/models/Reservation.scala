@@ -2,4 +2,4 @@ package models
 
 import java.time.LocalDateTime
 
-case class Reservation(guest: Guest, room: Room, startDate: LocalDateTime, endDate: LocalDateTime)
+case class Reservation(guestName: String, guestEmail: String, roomId: String, startDate: LocalDateTime, endDate: LocalDateTime)

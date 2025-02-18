@@ -9,7 +9,10 @@ sbtVersion := "1.10.7"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.2.9",
   "com.typesafe.akka" %% "akka-stream" % "2.6.20",
-  "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.9"
+  "com.typesafe.akka" %% "akka-http-spray-json" % "10.2.9",
+  "org.postgresql" % "postgresql" % "42.5.4",
+  "com.typesafe.slick" %% "slick" % "3.4.1",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.4.1"
 )
 
 

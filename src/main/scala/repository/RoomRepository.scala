@@ -1,12 +1,25 @@
 package repository
 
 import models._
-import scala.collection.mutable
+import slick.jdbc.PostgresProfile.api._
+import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import slick.jdbc.PostgresProfile.api._
 
-class RoomRepository {
-  private val rooms = mutable.Map[String, Room]()
+class RoomTable(tag: Tag) extends Table[Room](tag, "rooms") {
+  def id = column[String]("id", O.PrimaryKey)
+  def capacity = column[Int]("capacity")
+  def isAvailable = column[Boolean]("is_available", O.Default(true))
 
-  def addRoom(room: Room): Unit = rooms.put(room.id, room)
-  def removeRoom(roomId: String): Unit = rooms.remove(roomId)
-  def getRoom(roomId: String): Option[Room] = rooms.get(roomId)
+  def * = (id, capacity, isAvailable) <> (Room.tupled, Room.unapply)
+}
+
+
+class RoomRepository(db: Database)(implicit ec: ExecutionContext) {
+  private val rooms = TableQuery[RoomTable]
+
+  def addRoom(room: Room): Future[Int] = db.run(rooms += room)
+  def removeRoom(roomId: String): Future[Int] = db.run(rooms.filter(_.id === roomId).delete)
+  def getRoom(roomId: String): Future[Option[Room]] = db.run(rooms.filter(_.id === roomId).result.headOption)
 }
