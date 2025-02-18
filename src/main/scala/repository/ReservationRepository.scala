@@ -1,25 +1,42 @@
-package repository
+package com.hotel.booking.repository
 
-import models._
+import com.hotel.booking.domain.Reservation
+import com.hotel.booking.infrastructure.DatabaseConfig
 import slick.jdbc.PostgresProfile.api._
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 import java.time.LocalDateTime
 
 class ReservationTable(tag: Tag) extends Table[Reservation](tag, "reservations") {
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+  def roomId = column[Int]("room_id")
   def guestName = column[String]("guest_name")
-  def guestEmail = column[String]("guest_email")
-  def roomId = column[String]("room_id")
-  def startDate = column[LocalDateTime]("start_date")
-  def endDate = column[LocalDateTime]("end_date")
+  def startTime = column[LocalDateTime]("start_time")
+  def endTime = column[LocalDateTime]("end_time")
 
-  def * = (guestName, guestEmail, roomId, startDate, endDate).mapTo[Reservation]
+  def * = (id.?, roomId, guestName, startTime, endTime) <> (Reservation.tupled, Reservation.unapply)
 }
 
-class ReservationRepository(db: Database)(implicit ec: ExecutionContext) {
+class ReservationRepository(implicit ec: ExecutionContext) {
   private val reservations = TableQuery[ReservationTable]
 
-  def addReservation(reservation: Reservation): Future[Int] = db.run(reservations += reservation)
-  def getReservationsByRoom(roomId: String): Future[Seq[Reservation]] =
-    db.run(reservations.filter(_.roomId === roomId).result)
+  def save(reservation: Reservation): Future[Either[String, Reservation]] = {
+    val overlappingQuery = reservations.filter(r =>
+      r.roomId === reservation.roomId &&
+        r.startTime < reservation.endTime &&
+        r.endTime > reservation.startTime
+    ).exists.result
+
+    DatabaseConfig.run(overlappingQuery).flatMap { exists =>
+      if (exists) {
+        Future.successful(Left("Room is already booked for this time slot."))
+      } else {
+        val insertQuery = (reservations returning reservations.map(_.id)) += reservation.copy(id = None)
+        DatabaseConfig.run(insertQuery).map(id => Right(reservation.copy(id = Some(id))))
+      }
+    }
+  }
+
+  def findByDate(date: LocalDateTime): Future[Seq[Reservation]] = {
+    DatabaseConfig.run(reservations.filter(r => r.startTime >= date && r.startTime < date.plusDays(1)).result)
+  }
 }

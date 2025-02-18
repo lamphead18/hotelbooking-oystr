@@ -1,27 +1,10 @@
-package services
+package com.hotel.booking.services
 
-import models._
-import repository._
-import factory.ReservationFactory
+import com.hotel.booking.domain.Reservation
 import java.time.LocalDateTime
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class ReservationService(factory: ReservationFactory, reservationRepo: ReservationRepository)(implicit ec: ExecutionContext) {
-
-  def bookRoom(guest: Guest, room: Room, startDate: LocalDateTime, endDate: LocalDateTime): Future[Option[Reservation]] = {
-    reservationRepo.getReservationsByRoom(room.id).map { reservations =>
-      val isAvailable = reservations.forall { res =>
-        val cleaningEnd = res.endDate.plusHours(4)
-        startDate.isAfter(cleaningEnd)
-      }
-
-      if (isAvailable) {
-        val reservation = factory.createReservation(guest, room, startDate, endDate)
-        reservation.foreach(reservationRepo.addReservation)
-        reservation
-      } else {
-        None
-      }
-    }
-  }
+trait ReservationService {
+  def bookReservation(reservation: Reservation): Future[Either[String, Reservation]]
+  def getOccupancy(day: LocalDateTime): Future[Seq[Reservation]]
 }
