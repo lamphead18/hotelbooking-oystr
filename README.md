@@ -6,57 +6,57 @@ Este projeto é um sistema de reserva de quartos de hotel desenvolvido em Scala 
 
 🛠 Tecnologias Utilizadas
 
-Linguagem: Scala 2.13
+🚀 Linguagem: Scala 2.13
 
-Framework HTTP: Akka HTTP
+🌍 Framework HTTP: Akka HTTP
 
-Banco de Dados: PostgreSQL
+🗄️ Banco de Dados: PostgreSQL
 
-ORM: Slick
+🔗 ORM: Slick
 
-Gerenciador de Build: sbt
+⚙️ Gerenciador de Build: sbt
 
 📌 Estrutura do Projeto
 
-Organizei o projeto em camadas separadas para melhor manutenção e modularidade:
+Organizei o projeto em camadas separadas para melhor manutenção e modularidade.
 
 📌 Design Patterns Utilizados
 
-Repository Pattern
+🏛️ Repository Pattern
 
 Eu utilizei o Repository Pattern para desacoplar a lógica de persistência e facilitar futuras mudanças no banco de dados.
 
-Service Layer Pattern
+🎯 Service Layer Pattern
 
 Eu criei uma camada de serviços para organizar as regras de negócio separadamente da API e do banco de dados.
 
-Dependency Injection
+🏗️ Dependency Injection
 
 Eu injetei dependências nos serviços, permitindo que os repositórios fossem substituídos em testes ou em configurações específicas.
 
 📌 Decisões Estratégicas
 
-Banco de Dados
+🗄️ Banco de Dados
 
 Eu utilizei PostgreSQL por sua confiabilidade e suporte para transações complexas. Utilizei Slick para facilitar a comunicação com o banco.
 
-Concorrência e Overbooking
+⏳ Concorrência e Overbooking
 
 Eu implementei verificações antes da inserção no banco para impedir reservas duplicadas no mesmo horário.
 
-Tratamento de Erros
+⚠️ Tratamento de Erros
 
 Eu padronizei as respostas da API e adicionei mensagens de erro claras para melhorar a usabilidade.
 
 📌 Endpoints da API
 
-Quartos
+🏨 Quartos
 
 # Adicionar um novo quarto
 POST http://localhost:8080/rooms
 Content-Type: application/json
 {
-  "name": "Suite Deluxe"
+  "name": "Nome do Quarto"
 }
 
 # Listar todos os quartos
@@ -65,14 +65,14 @@ GET http://localhost:8080/rooms
 # Remover um quarto
 DELETE http://localhost:8080/rooms/{id}
 
-Reservas
+🛏️ Reservas
 
 # Criar uma nova reserva
 POST http://localhost:8080/reservations
 Content-Type: application/json
 {
   "roomId": 1,
-  "guestName": "Andreza Leal",
+  "guestName": "Nome do Cliente",
   "startTime": "2024-02-19T14:00:00",
   "endTime": "2024-02-19T16:00:00"
 }
