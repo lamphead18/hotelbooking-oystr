@@ -4,7 +4,7 @@
 
 Este projeto é um sistema de reserva de quartos de hotel desenvolvido em Scala com Akka HTTP. Ele gerencia o inventário de quartos e reservas, impedindo overbooking e respeitando um intervalo de 4 horas para limpeza dos quartos.
 
-# 🛠 Tecnologias Utilizadas
+* 🛠 Tecnologias Utilizadas * 
 
 🚀 Linguagem: Scala 2.13
 
