@@ -20,31 +20,6 @@ Gerenciador de Build: sbt
 
 Organizei o projeto em camadas separadas para melhor manutenção e modularidade:
 
-HotelBooking/
-│── src/main/scala/com/hotel/booking/
-│   ├── api/                # Endpoints HTTP
-│   │   ├── RoomRoutes.scala
-│   │   ├── ReservationRoutes.scala
-│   │
-│   ├── domain/             # Modelos de Dados
-│   │   ├── Room.scala
-│   │   ├── Reservation.scala
-│   │
-│   ├── services/           # Regras de Negócio
-│   │   ├── RoomService.scala
-│   │   ├── ReservationService.scala
-│   │
-│   ├── repository/         # Persistência no Banco de Dados
-│   │   ├── RoomRepository.scala
-│   │   ├── ReservationRepository.scala
-│   │
-│   ├── infrastructure/     # Configurações e Inicialização do Servidor
-│   │   ├── DatabaseConfig.scala
-│   │   ├── Server.scala
-│
-│── build.sbt               # Configuração do sbt
-│── README.md               # Documentação do Projeto
-
 📌 Design Patterns Utilizados
 
 Repository Pattern
