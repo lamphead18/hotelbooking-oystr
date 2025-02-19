@@ -82,4 +82,4 @@ GET http://localhost:8080/reservations/2024-02-19T00:00:00
 
 # 📌 Conclusão
 
-Eu desenvolvi este projeto utilizando boas práticas de arquitetura, design patterns e segurança, garantindo gestão eficiente de reservas, controle de concorrência e API bem estruturada.
+Este projeto foi desenvolvido utilizando boas práticas de arquitetura, design patterns e segurança, garantindo gestão eficiente de reservas, controle de concorrência e API bem estruturada.
