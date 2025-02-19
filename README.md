@@ -1,10 +1,10 @@
-# 📌 HotelBooking - Documentação
+**📌 HotelBooking - Documentação**
 
-# 📖 Visão Geral
+**📖 Visão Geral**
 
 Este projeto é um sistema de reserva de quartos de hotel desenvolvido em Scala com Akka HTTP. Ele gerencia o inventário de quartos e reservas, impedindo overbooking e respeitando um intervalo de 4 horas para limpeza dos quartos.
 
-* 🛠 Tecnologias Utilizadas * 
+**🛠 Tecnologias Utilizadas** 
 
 🚀 Linguagem: Scala 2.13
 
@@ -16,39 +16,39 @@ Este projeto é um sistema de reserva de quartos de hotel desenvolvido em Scala 
 
 ⚙️ Gerenciador de Build: sbt
 
-# 📌 Estrutura do Projeto
+**📌 Estrutura do Projeto**
 
 Organizei o projeto em camadas separadas para melhor manutenção e modularidade.
 
-# 📌 Design Patterns Utilizados
+**📌 Design Patterns Utilizados**
 
-# 🏛️ Repository Pattern
+**🏛️ Repository Pattern**
 
-Eu utilizei o Repository Pattern para desacoplar a lógica de persistência e facilitar futuras mudanças no banco de dados.
+Foi utilizado o Repository Pattern para desacoplar a lógica de persistência e facilitar futuras mudanças no banco de dados.
 
-# 🎯 Service Layer Pattern
+**🎯 Service Layer Pattern**
 
-Eu criei uma camada de serviços para organizar as regras de negócio separadamente da API e do banco de dados.
+Foi criada uma camada de serviços para organizar as regras de negócio separadamente da API e do banco de dados.
 
-# 🏗️ Dependency Injection
+**🏗️ Dependency Injection**
 
-Eu injetei dependências nos serviços, permitindo que os repositórios fossem substituídos em testes ou em configurações específicas.
+Foram injetadas dependências nos serviços, permitindo que os repositórios fossem substituídos em testes ou em configurações específicas.
 
-# 📌 Decisões Estratégicas
+**📌 Decisões Estratégicas**
 
-# 🗄️ Banco de Dados
+**🗄️ Banco de Dados**
 
 Eu utilizei PostgreSQL por sua confiabilidade e suporte para transações complexas. Utilizei Slick para facilitar a comunicação com o banco.
 
-# ⏳ Concorrência e Overbooking
+**⏳ Concorrência e Overbooking**
 
-Eu implementei verificações antes da inserção no banco para impedir reservas duplicadas no mesmo horário.
+Foram implementadas verificações antes da inserção no banco para impedir reservas duplicadas no mesmo horário.
 
-# ⚠️ Tratamento de Erros
+**⚠️ Tratamento de Erros**
 
-Eu padronizei as respostas da API e adicionei mensagens de erro claras para melhorar a usabilidade.
+As respostas da API foram padronizadas, também foram adicionadas mensagens de erro claras para melhorar a usabilidade.
 
-# 📌 Endpoints da API
+**📌 Endpoints da API**
 
 🏨 Quartos
 
