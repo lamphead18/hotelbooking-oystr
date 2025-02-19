@@ -22,13 +22,16 @@ class ReservationRepository(implicit ec: ExecutionContext) {
   def save(reservation: Reservation): Future[Either[String, Reservation]] = {
     val overlappingQuery = reservations.filter(r =>
       r.roomId === reservation.roomId &&
-        r.startTime < reservation.endTime &&
-        r.endTime > reservation.startTime
+        (
+          (r.startTime < reservation.endTime && r.endTime > reservation.startTime) ||
+            (r.endTime > reservation.startTime.minusHours(4)) ||
+            (r.startTime < reservation.endTime.plusHours(4))
+          )
     ).exists.result
 
     DatabaseConfig.run(overlappingQuery).flatMap { exists =>
       if (exists) {
-        Future.successful(Left("Room is already booked for this time slot."))
+        Future.successful(Left("Room is not available due to a cleaning period."))
       } else {
         val insertQuery = (reservations returning reservations.map(_.id)) += reservation.copy(id = None)
         DatabaseConfig.run(insertQuery).map(id => Right(reservation.copy(id = Some(id))))
